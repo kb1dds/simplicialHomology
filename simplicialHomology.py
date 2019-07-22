@@ -1,6 +1,6 @@
 # Relative simplicial homology library
 #
-# Copyright (c) 2014-2017, Michael Robinson, Chris Capraro
+# Copyright (c) 2014-2019, Michael Robinson, Chris Capraro
 # Distribution of unaltered copies permitted for noncommercial use only
 # All other uses require express permission of the author
 # This software comes with no warrantees express or implied 
@@ -10,7 +10,6 @@ import itertools as it
 import multiprocessing as mp
 import functools as ft
 
-# If you're using Python 2.x you'll need to install the futures module (e.g., pip install futures)
 try:
     import concurrent.futures as th
 except:
@@ -141,12 +140,12 @@ def boundary(toplexes,k,relative=None,km1chain=None):
 
     # Generate dictionary of boundary matrix row indices
     # i.e., Keys = km1chain simplices labels, Values = row index
-    km1Dict = dict(zip(map(str,km1chain),range(0,len(km1chain))))
+    km1Dict = dict(list(zip(list(map(str,km1chain)),list(range(0,len(km1chain))))))
 
     # Get index into kchain simplices for constructing boundary
     # e.g., [A,B,C] => [B,C] - [A,C] + [A,B] so
     # indices would be [[1,2],[0,2],[0,1]]
-    indexLst = list(it.combinations(range(k+1),k))
+    indexLst = list(it.combinations(list(range(k+1)),k))
     indexLst.reverse()
 
     # Get boundary matrix coefficient list that corresponds index list
@@ -252,13 +251,13 @@ def localHomologyMultiproc(k,cplx,numProcs,localSimplices=None,iterate=True,rank
         Hks = [[0 for _ in range(len(localSimplices))] for _ in range(k)]
         for isplx,splx in enumerate(localSimplices):
             partialLocalHomology = ft.partial(localHomology, toplexes=cplx, simplices=[splx], rankOnly=rankOnly)
-            res=pool.map(partialLocalHomology, range(1,k+1)) #make our results with a map call
+            res=pool.map(partialLocalHomology, list(range(1,k+1))) #make our results with a map call
             for ri,r in enumerate(res):
                 Hks[ri][isplx]=r
     else:
         Hks = [0 for _ in range(k)]
         partialLocalHomology = ft.partial(localHomology, toplexes=cplx, simplices=localSimplices, rankOnly=rankOnly)
-        Hks=pool.map(partialLocalHomology, range(1,k+1)) #make our results with a map call
+        Hks=pool.map(partialLocalHomology, list(range(1,k+1))) #make our results with a map call
         
     pool.close() #we are not adding any more processes
     pool.join() #tell it to wait until all threads are done before 
@@ -279,7 +278,7 @@ def integerVertices(cplx1, cplx2=[]):
         
     cplx = cplx1 + cplx2
     vertslist=set([v for s in cplx for v in s])
-    vertsdict=dict(zip(vertslist,xrange(len(vertslist))))
+    vertsdict=dict(list(zip(vertslist,list(range(len(vertslist))))))
     cplx1=[[vertsdict[v] for v in s] for s in cplx1]
     cplx2=[[vertsdict[v] for v in s] for s in cplx2]
     
@@ -333,7 +332,7 @@ def iteratedCone(toplexes,subcomplex):
 
     # Renumber vertices and return
     vertslist=list(set([v for s in coned for v in s]))
-    return [(map(lambda x: vertslist.index(x),s),maxHopLength-t) for s,t in conedLabeled]
+    return [([vertslist.index(x) for x in s],maxHopLength-t) for s,t in conedLabeled]
 
 def complex2perseus(filename,toplexes,labels=False):
     """Write a complex out as a file for input into Perseus.  If there are labels containing birth times, set labels=True"""

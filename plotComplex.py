@@ -1,6 +1,6 @@
 # Unit test for persistence sheaf library
 #
-# Copyright (c) 2016-2017, Michael Robinson
+# Copyright (c) 2016-2019, Michael Robinson
 # Distribution of unaltered copies permitted for noncommercial use only
 # All other uses require express permission of the author
 # This software comes with no warrantees express or implied 
@@ -24,7 +24,7 @@ def plot_complex(locations,cplx,color=None):
             else:
                 col='g'
             for face in sh.ksublists(f,3):
-                x,y=zip(*[locations[i] for i in face])
+                x,y=list(zip(*[locations[i] for i in face]))
                 plt.fill(x,y,col,alpha=0.5)
 
     # Plot simplices of dimension 1 (edges)
@@ -37,7 +37,7 @@ def plot_complex(locations,cplx,color=None):
                     col=colors[color[idx]]
             else:
                 col='k'
-            x,y=zip(*[locations[i] for i in f])
+            x,y=list(zip(*[locations[i] for i in f]))
             plt.plot(x,y,color=col,lw=3)
 
     # Plot simplices of dimension 0 (vertices)

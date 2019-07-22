@@ -1,7 +1,7 @@
 SimplicialHomology: Local and Relative Simplicial Homology
 ==========================================================
 
-This repository consists of Python 2.7 libraries for local and relative homology of abstract simplicial complexes [0]_
+This repository consists of Python 3.5 libraries for local and relative homology of abstract simplicial complexes [0]_
 
 If you find anything that you can correct, feel free to send me suggestions!
 
